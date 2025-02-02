@@ -1,8 +1,7 @@
-use donezo::db::conn;
+use donezo::command::get_command;
 
 fn main() -> anyhow::Result<()> {
-    let conn = conn()?;
-    let value = conn.execute("Select 1 + 1;", ())?;
-    println!("{}", value);
+    let command = get_command();
+    println!("{:?}", command.get_matches());
     Ok(())
 }
