@@ -13,6 +13,8 @@ pub fn get_command() -> Command {
     Command::new("Denezo")
         .bin_name("denezo")
         .subcommand_required(true)
+        .author("Abhishek2010DevSingh")
+        .about("Denezo is a simple command-line to-do list manager built with Rust. It allows users to manage tasks by adding, listing, completing, and deleting tasks from a SQLite database.")
         .styles(CLAP_STYLING)
         .subcommand(
             Command::new("add")
