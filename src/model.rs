@@ -3,14 +3,14 @@ use tabled::Tabled;
 
 #[derive(Tabled)]
 pub struct Task {
-    id: i32,
-    title: String,
-    done: bool,
-    due_time: DisplayOption<String>,
-    created_at: String,
+    pub id: i32,
+    pub title: String,
+    pub done: bool,
+    pub due_time: DisplayOption<String>,
+    pub created_at: String,
 }
 
-pub struct DisplayOption<T>(Option<T>);
+pub struct DisplayOption<T>(pub Option<T>);
 
 impl<T: fmt::Display> fmt::Display for DisplayOption<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

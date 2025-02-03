@@ -1,13 +1,7 @@
-use donezo::{
-    command::get_command,
-    db::{conn, migration},
-};
+use donezo::{command::get_command, command_handler::CommandHandler, db::conn};
 
 fn main() -> anyhow::Result<()> {
-    let conn = conn()?;
-    migration(&conn)?;
-
-    let command = get_command();
-    println!("{:?}", command.get_matches());
+    let command_handler = CommandHandler::new(conn()?)?;
+    command_handler.run(&get_command().get_matches())?;
     Ok(())
 }
