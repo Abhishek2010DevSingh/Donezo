@@ -32,4 +32,15 @@ impl CommandHandler {
 
         Ok(())
     }
+
+    pub fn run(&self, matches: &ArgMatches) -> Result<()> {
+        match matches.subcommand() {
+            Some(("add", sub_matches)) => self.add(sub_matches)?,
+            //Some(("list", _)) => self.list()?,
+            //Some(("complete", sub_matches)) => self.complete(sub_matches)?,
+            //Some(("delete", sub_matches)) => self.delete(sub_matches)?,
+            _ => eprintln!("Unknown command"),
+        }
+        Ok(())
+    }
 }

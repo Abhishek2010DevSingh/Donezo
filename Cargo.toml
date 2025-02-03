@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.95"
+chrono = "0.4.39"
 clap = { version = "4.5.27", features = ["cargo"] }
 clap-cargo = "0.15.2"
-rusqlite = "0.33.0"
+rusqlite = { version = "0.33.0", features = ["chrono"] }
+tabled = "0.17.0"
