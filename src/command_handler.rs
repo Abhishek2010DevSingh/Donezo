@@ -13,7 +13,7 @@ impl CommandHandler {
         Ok(CommandHandler(conn))
     }
 
-    pub fn add(&self, matches: &ArgMatches) -> Result<()> {
+    fn add(&self, matches: &ArgMatches) -> Result<()> {
         let task = matches
             .get_one::<String>("TASK")
             .context("TASK argument is required")?;
@@ -73,10 +73,36 @@ impl CommandHandler {
         Ok(())
     }
 
+    fn list(&self, matches: &ArgMatches) -> Result<()> {
+        let query = if matches.args_present() {
+            "SELECT id, title, due_time, done, created_at FROM tasks LIMIT 10;" // Fix here
+        } else {
+            "SELECT id, title, due_time, done, created_at FROM tasks;" // Fix here
+        };
+        let mut stmt = self.0.prepare(query)?;
+        let tasks: Vec<Task> = stmt
+            .query_map(params![], |row| {
+                Ok(Task {
+                    id: row.get(0)?,
+                    title: row.get(1)?,
+                    due_time: crate::model::DisplayOption(row.get::<_, Option<String>>(2)?),
+                    done: row.get::<_, i32>(3)? != 0,
+                    created_at: row.get(4)?,
+                })
+            })
+            .context("Failed to retrieve tasks")?
+            .map(|task| task.context("Failed to map task"))
+            .collect::<Result<Vec<Task>, _>>()?;
+
+        println!("{}", Table::new(tasks));
+
+        Ok(())
+    }
+
     pub fn run(&self, matches: &ArgMatches) -> Result<()> {
         match matches.subcommand() {
             Some(("add", sub_matches)) => self.add(sub_matches)?,
-            //Some(("list", _)) => self.list()?,
+            Some(("list", sub_matches)) => self.list(sub_matches)?,
             //Some(("complete", sub_matches)) => self.complete(sub_matches)?,
             //Some(("delete", sub_matches)) => self.delete(sub_matches)?,
             _ => eprintln!("Unknown command"),
