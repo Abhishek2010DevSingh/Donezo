@@ -99,12 +99,62 @@ impl CommandHandler {
         Ok(())
     }
 
+    fn complete(&self, matches: &ArgMatches) -> Result<()> {
+        let task_id = matches
+            .get_one::<String>("ID")
+            .context("ID argument is required")?;
+
+        let task_id: i32 = task_id.parse().context("Failed to parse task ID")?;
+
+        let mut stmt = self
+            .0
+            .prepare("UPDATE tasks SET done = 1 WHERE id = ?1")
+            .context("Failed to prepare statement for completing task")?;
+
+        let rows_affected = stmt
+            .execute(params![task_id])
+            .context("Failed to mark task as complete")?;
+
+        if rows_affected == 0 {
+            anyhow::bail!("No task found with ID {}", task_id);
+        }
+
+        println!("Task {} marked as complete", task_id);
+
+        Ok(())
+    }
+
+    fn delete(&self, matches: &ArgMatches) -> Result<()> {
+        let task_id = matches
+            .get_one::<String>("ID")
+            .context("ID argument is required")?;
+
+        let task_id: i32 = task_id.parse().context("Failed to parse task ID")?;
+
+        let mut stmt = self
+            .0
+            .prepare("DELETE FROM tasks WHERE id = ?1")
+            .context("Failed to prepare statement for deleting task")?;
+
+        let rows_affected = stmt
+            .execute(params![task_id])
+            .context("Failed to delete task")?;
+
+        if rows_affected == 0 {
+            anyhow::bail!("No task found with ID {}", task_id);
+        }
+
+        println!("Task {} deleted", task_id);
+
+        Ok(())
+    }
+
     pub fn run(&self, matches: &ArgMatches) -> Result<()> {
         match matches.subcommand() {
             Some(("add", sub_matches)) => self.add(sub_matches)?,
             Some(("list", sub_matches)) => self.list(sub_matches)?,
-            //Some(("complete", sub_matches)) => self.complete(sub_matches)?,
-            //Some(("delete", sub_matches)) => self.delete(sub_matches)?,
+            Some(("complete", sub_matches)) => self.complete(sub_matches)?,
+            Some(("delete", sub_matches)) => self.delete(sub_matches)?,
             _ => eprintln!("Unknown command"),
         }
         Ok(())
