@@ -17,7 +17,7 @@ Denezo is a simple command-line to-do list manager built with Rust. It allows us
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/denezo.git
+   git clone https://github.com/Abhishek2010DevSingh/denezo.git
    cd denezo
    ```
 
