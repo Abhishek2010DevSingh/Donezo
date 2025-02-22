@@ -75,9 +75,9 @@ impl CommandHandler {
 
     fn list(&self, matches: &ArgMatches) -> Result<()> {
         let query = if matches.args_present() {
-            "SELECT id, title, due_time, done, created_at FROM tasks LIMIT 10;" // Fix here
+            "SELECT id, title, due_time, done, created_at FROM tasks LIMIT 10;"
         } else {
-            "SELECT id, title, due_time, done, created_at FROM tasks;" // Fix here
+            "SELECT id, title, due_time, done, created_at FROM tasks;" 
         };
         let mut stmt = self.0.prepare(query)?;
         let tasks: Vec<Task> = stmt
