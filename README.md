@@ -93,6 +93,9 @@ denezo delete 1
 ## Database
 The application uses an SQLite database to store tasks. Upon the first run, the database will be automatically initialized with a `tasks` table.
 
+##  Credits  
+This project idea was inspired by [roadmap.sh's Number Guessing Game](https://roadmap.sh/projects/number-guessing-game).  
+
 ## License
 Distributed under the MIT License. See LICENSE for more information.
 
